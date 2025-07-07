@@ -243,5 +243,89 @@ pub fn study_demo_13() {
     for ch in input.trim().chars() {
         result += ch.to_digit(10).expect("Invalid digit") as i32;
     }
-    println!("{}", result)
+    println!("{}", result);
+}
+/*
+ input : 3661
+ output: 1 1 1
+ explain: 3661 / 3600 = 1
+           61 / 60  = 1
+           1
+*/
+pub fn study_demo_14() {
+    let stdin = io::stdin();
+    let mut input = String::new();
+
+    let _ = stdin.lock().read_line(&mut input);
+    if let Ok(num) = input.trim().parse::<i32>() {
+        let h = num / 3600;
+        let m = (num - 3600 * h) / 60;
+        let s = num - 3600 * h - 60;
+        println!("{}{}{}", h, m, s);
+    }
+}
+// input  :n MB
+// output : i32
+// explain : n * 1024 *1024 /4  = output
+
+pub fn study_demo_15() {
+    let stdin = io::stdin();
+    let mut input = String::new();
+
+    let _ = stdin.lock().read_line(&mut input);
+    if let Ok(num) = input.trim().parse::<i32>() {
+        let output = num * 1024 * 1024 / 4;
+        println!("{}", output);
+    }
+}
+// input 1 1 1
+// output 6 1   S=2(ab + bc + ac) V = abc
+pub fn study_demo_16() {
+    let stdin = io::stdin();
+    let mut input = String::new();
+    let _ = stdin.lock().read_line(&mut input);
+
+    let nums: Vec<f64> = input
+        .trim()
+        .split_whitespace()
+        .filter_map(|x| x.parse::<f64>().ok())
+        .collect();
+    let a = nums[0];
+    let b = nums[1];
+    let c = nums[2];
+    let s = 2.0 * (a * b + b * c + a * c);
+    let v = a * b * c;
+    println!("{} {}", s, v);
+}
+// input 100 80  50
+// output 100 * 0.2 + 80 * 0.3 + 50 * 0.5
+pub fn study_demo_17() {
+    let stdin = io::stdin();
+    let mut input = String::new();
+
+    let _ = stdin.lock().read_line(&mut input);
+
+    let nums: Vec<f64> = input
+        .trim()
+        .split_whitespace()
+        .filter_map(|x| x.parse::<f64>().ok())
+        .collect();
+    let score_first = nums[0];
+    let score_second = nums[1];
+    let score_third = nums[2];
+
+    let result = score_first * 0.2 + score_second * 0.3 + score_third * 0.5;
+    println!("{}", result);
+}
+// input n
+// output (n * (n+1)) / 2
+pub fn study_demo_18() {
+    let stdin = io::stdin();
+    let mut input = String::new();
+    stdin.read_line(&mut input).expect("not a vaild number");
+
+    if let Ok(num) = input.trim().parse::<i32>() {
+        let result = num * (num + 1) / 2;
+        println!("{}", result);
+    }
 }
