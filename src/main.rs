@@ -38,5 +38,6 @@ fn main() {
     // study_demo_1::study_demo_36();
     // study_demo_1::study_demo_37();
     // study_demo_2::study_demo_1();
-    study_demo_2::study_demo_2();
+    // study_demo_2::study_demo_2();
+    // study_demo_2::study_demo_6();
 }
