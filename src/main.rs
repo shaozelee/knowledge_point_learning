@@ -1,6 +1,8 @@
+#![allow(dead_code)]
 // use knowledge_point_learning::study_demo;
 // use knowledge_point_learning::study_demo_1;
-use knowledge_point_learning::study_demo_2;
+// use knowledge_point_learning::study_demo_2;
+use knowledge_point_learning::study_demo_3;
 fn main() {
     // study_demo::study_demo_1();
     // study_demo::study_demo_2();
@@ -40,4 +42,10 @@ fn main() {
     // study_demo_2::study_demo_1();
     // study_demo_2::study_demo_2();
     // study_demo_2::study_demo_6();
+    // study_demo_3::study_demo_1();
+    // study_demo_3::study_demo_3();
+    // study_demo_3::study_demo_4();
+
+
 }
+

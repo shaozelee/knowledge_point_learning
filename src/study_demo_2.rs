@@ -285,6 +285,7 @@ fn study_demo_11(str: String, n: u8) -> String {
         .collect();
     encrypted
 }
+#[allow(dead_code)]
 fn uncover_encrypted(str:String,n:u8) -> String {
     let uncover:String = str.chars().map(|c| {
         let base = if c.is_ascii_lowercase(){
