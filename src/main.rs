@@ -46,6 +46,7 @@ fn main() {
     // study_demo_3::study_demo_3();
     // study_demo_3::study_demo_4();
 
-
+    let vec = vec![1, 2, 3];
+    println!("{}",vec.iter().min().unwrap());
 }
 
