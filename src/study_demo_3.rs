@@ -469,3 +469,155 @@ fn solve_express(input_str: String) -> i32 {
 fn test_solve_express() {
     assert_eq!(solve_express("3*(3+1)".to_string()), 12); // 3 * 4 = 12
 }
+
+// input "1#1#+#3#+#4*"
+// ouput  20
+fn legal_exp(expr: String) -> i32 {
+    let tokens: Vec<&str> = expr.split('#').collect();
+    let mut stack: Vec<i32> = Vec::new();
+
+    for token in tokens {
+        match token {
+            "+" | "-" | "*" => {
+                let a = stack.pop().unwrap();
+                let b = stack.pop().unwrap();
+                let res = match token {
+                    "+" => b + a,
+                    "-" => b - a,
+                    "*" => b * a,
+                    _ => unreachable!(),
+                };
+                stack.push(res);
+            }
+            _ => {
+                let num = token.parse().unwrap();
+                stack.push(num);
+            }
+        }
+    }
+
+    stack.pop().unwrap()
+}
+
+#[test]
+fn test_legal_exp() {
+    let str = "1#1#+#3#+#4#*".to_string();
+    assert_eq!(legal_exp(str), 20);
+}
+// 入栈顺序 1 2 3 4 5  判断是否可以为 2 5 4 3 1 的顺序出栈
+//  比如 入栈 1 2 出栈 2 在入栈 3 4 5 出栈 5 4 3 1
+//  1 2 3 4 5  | 2 5 4 3 1
+//  1 2 3 4 5  | 3 4 5 2 1
+// 编写一个函数记录2个stack  判断后一个stack 是否当成第一个数组的出栈顺序
+// fn is_legal_stack(input_stack: Vec<i32>, mut output_stack: Vec<i32>) -> bool {
+//     // 如果输入输出长度不匹配，直接返回false
+//     if input_stack.len() != output_stack.len() {
+//         return false;
+//     }
+
+//     let mut tmp_stack = Vec::new(); // 临时栈
+
+//     for input_value in input_stack {
+//         // 检查输入值是否匹配当前输出序列顶部
+//         if Some(&input_value) == output_stack.last() {
+//             output_stack.pop();
+
+//             // 检查临时栈与输出序列是否能继续匹配
+//             while !tmp_stack.is_empty() && !output_stack.is_empty() {
+//                 if let (Some(tmp_top), Some(output_top)) = (tmp_stack.last(), output_stack.last()) {
+//                     if tmp_top == output_top {
+//                         tmp_stack.pop();
+//                         output_stack.pop();
+//                     } else {
+//                         break;
+//                     }
+//                 } else {
+//                     break;
+//                 }
+//             }
+//         } else {
+//             tmp_stack.push(input_value);
+//         }
+//     }
+
+//     // 处理临时栈中剩余元素
+//     while !tmp_stack.is_empty() && !output_stack.is_empty() {
+//         if tmp_stack.last() == output_stack.last() {
+//             tmp_stack.pop();
+//             output_stack.pop();
+//         } else {
+//             return false;
+//         }
+//     }
+
+//     // 两个栈必须都为空
+//     tmp_stack.is_empty() && output_stack.is_empty()
+// }
+
+fn is_legal_stack(input_stack: Vec<i32>, output_stack: Vec<i32>) -> bool {
+    // 如果长度不相等，直接返回false
+    if input_stack.len() != output_stack.len() {
+        return false;
+    }
+
+    let mut stack = Vec::new(); // 辅助栈
+    let mut j = 0; // 输出序列的索引
+
+    for &num in input_stack.iter() {
+        // 当前元素入栈
+        stack.push(num);
+
+        // 对 入栈的元素和 输出栈的原因比对，一样就POP
+        while !stack.is_empty() && stack.last() == Some(&output_stack[j]) && j < output_stack.len()
+        {
+            stack.pop();
+            j += 1;
+        }
+    }
+
+    // 最终栈必须为空，且输出序列已全部匹配
+    stack.is_empty() && j == output_stack.len()
+}
+#[test]
+fn test_is_legal_stack() {
+    let input_stack = vec![1, 2, 3, 4, 5];
+    let output_stack = vec![3, 4, 5, 2, 1];
+
+    assert!(is_legal_stack(input_stack, output_stack))
+}
+
+//  [2, 1, 5, 3, 4]     [5, 4, 3, 1, 2]
+fn largest_permutation(stack_ops: Vec<i32>) -> Vec<i32> {
+    let n = stack_ops.len();
+    if n == 0 {
+        return Vec::new();
+    }
+
+    // 构建后缀最大值数组
+    let mut suffix_max = vec![i32::MIN; n + 1];
+    for i in (0..n).rev() {
+        suffix_max[i] = suffix_max[i + 1].max(stack_ops[i]);
+    }
+
+    let (mut stack, mut result) = (Vec::new(), Vec::new());
+    for (i, &num) in stack_ops.iter().enumerate() {
+        stack.push(num);
+        // 当栈顶元素≥后序最大值时持续出栈
+        while let Some(&top) = stack.last() {
+            if top >= suffix_max[i + 1] {
+                result.push(stack.pop().unwrap());
+            } else {
+                break;
+            }
+        }
+    }
+    // 剩余元素直接出栈
+    result.extend(stack.into_iter().rev());
+    result
+}
+
+#[test]
+fn test_max_stack_output() {
+    let input_stack = vec![2, 1, 5, 3, 4];
+    println!("{:?}", largest_permutation(input_stack));
+}
